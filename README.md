@@ -7,6 +7,6 @@ Requerimentos
 Para o correto funcionamento da API é necessário a instalação dos recursos abaixo digitando os comando no terminal no modo root.
 
 sudo su
-apt-get update && apt-get upgrade
+apt-get update && apt-get upgrade \n
 sudo apt-get install python-dev python-rpi.gpio
 git clone https://github.com/adafruit/Adafruit_Python_DHT.git
