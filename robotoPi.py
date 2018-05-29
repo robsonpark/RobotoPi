@@ -10,7 +10,7 @@ __status__ = "Development"
 '''
 Requeriments:
 
-sudo apt-get install python-dev python-rpi.gpio
+sudo apt-get install python-dev python-rpi.gpio espeak
 
 git clone https://github.com/adafruit/Adafruit_Python_DHT.git
 
@@ -22,6 +22,7 @@ import RPi.GPIO as GPIO
 import Adafruit_DHT
 import smbus
 import time
+import os
 
 class RobotoPi():
     def __init__(self):
@@ -458,13 +459,90 @@ class Led_RGB():
         self.color = "OFF"
 
 
-class TextToSpeak():
-    def __init__(self):
-        pass
+class Voice():
+    def __init__(self, lang):
+        self.lang = lang
+    def speak(text, self):
+        os.system("espeak -v "+lang+" \""+text+"\"")
 class Camera():
     def __init__(self):
         pass
 class ColorSensor():
-    def __init__(self):
-        pass
+    def __init__(self, signal, s2, s3):
+        self.signal = signal
+        self.s2 = s2
+        self.s3 = s3
+        GPIO.setup(signal,GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(s2,GPIO.OUT)
+        GPIO.setup(s3,GPIO.OUT)
 
+    def getColor(self):
+        temp = 1
+        
+        GPIO.output(self.s2,GPIO.LOW)
+        GPIO.output(self.s3,GPIO.LOW)
+        time.sleep(0.3)
+        start = time.time()
+        
+        for impulse_count in range(NUM_CYCLES):
+            GPIO.wait_for_edge(self.signal, GPIO.FALLING)
+        duration = time.time() - start 
+        red  = NUM_CYCLES / duration   
+   
+        GPIO.output(self.s2,GPIO.LOW)
+        GPIO.output(self.s3,GPIO.HIGH)
+        time.sleep(0.3)
+        start = time.time()
+        
+        for impulse_count in range(NUM_CYCLES):
+            GPIO.wait_for_edge(self.signal, GPIO.FALLING)
+        duration = time.time() - start
+        blue = NUM_CYCLES / duration
+        
+
+        GPIO.output(self.s2,GPIO.HIGH)
+        GPIO.output(self.s3,GPIO.HIGH)
+        time.sleep(0.3)
+        start = time.time()
+        
+        for impulse_count in range(NUM_CYCLES):
+            GPIO.wait_for_edge(self.signal, GPIO.FALLING)
+        duration = time.time() - start
+        green = NUM_CYCLES / duration
+        
+          
+        if green<7000 and blue<7000 and red>12000:
+            temp=1
+            return("red")
+        elif red<12000 and  blue<12000 and green>12000:
+            
+            temp=1
+            return("green")
+        elif green<7000 and red<7000 and blue>12000:
+            
+            temp=1
+            return("blue")
+        elif red>10000 and green>10000 and blue>10000 and temp==1:
+            temp=0
+            return("No color")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
