@@ -8,5 +8,9 @@ Para o correto funcionamento da API é necessário a instalação dos recursos a
 
 sudo su <br/>
 apt-get update && apt-get upgrade <br/>
-sudo apt-get install python-dev python-rpi.gpio <br/>
+sudo apt-get install python-dev python-rpi.gpio espeak git<br/>
 git clone https://github.com/adafruit/Adafruit_Python_DHT.git <br/>
+
+Para utilização é necessário clonar a API para a pasta do seu projeto utilizando o seguinte comando: </br>
+
+git clone https://github.com/robsonpark/RobotoPi.git
