@@ -19,10 +19,12 @@ https://github.com/nickcoutsos/MPU-6050-Python
 '''
 
 import RPi.GPIO as GPIO
-import Adafruit_DHT
+#import Adafruit_DHT
 import smbus
 import time
 import os
+from gpiozero import PWMOutputDevice
+from gpiozero import DigitalOutputDevice
 
 class RobotoPi():
     def __init__(self):
@@ -326,7 +328,7 @@ class Relay():
         
     def getState(self):
         return self.state     
-
+'''
 class Temperature():
     def __init__(self, pinNumber):
         self.pinNumber = pinNumber
@@ -339,6 +341,32 @@ class Temperature():
     def getHumidity(self):
         humid, temp = Adafruit_DHT.read_retry(self.sensor, self.pinNumber);
         return humid
+'''
+class Motor():
+    def __init__(self, enablePin, inputPin1, inputPin2, speed):
+        self.PWM_DRIVE = enablePin		
+        self.FORWARD_LEFT_PIN = inputPin1	
+        self.REVERSE_LEFT_PIN = inputPin2
+        self.motor = PWMOutputDevice(self.PWM_DRIVE, True, 0, 1000)
+        self.forwardLeft = PWMOutputDevice(self.FORWARD_LEFT_PIN)
+        self.reverseLeft = PWMOutputDevice(self.REVERSE_LEFT_PIN)
+        self.speed = speed
+    def stop(self):
+        self.forwardLeft.value = False
+        self.reverseLeft.value = False
+    def forwardDrive(self):
+        
+        self.forwardLeft.value = True
+        self.reverseLeft.value = False
+        self.motor.value = self.speed
+    def reverseDrive(self):
+        self.forwardLeft.value = False
+        self.reverseLeft.value = True
+        self.motor.value = self.speed
+    def setSpeep(self, speed):
+        self.speed = speed
+        self.motor.value = self.speed
+'''
 class Motor():
     def __init__(self, enablePin, inputPin1, inputPin2):
         self.enablePin = enablePin    
@@ -364,7 +392,7 @@ class Motor():
         GPIO.output(self.inputPin1, False) 
         GPIO.output(self.inputPin2, False) 
         self.motor_pwm.ChangeDutyCycle(0)
-
+'''
 class ServoMotor():
     def __init__(self, pinNumber):
         self.pinNumber = pinNumber

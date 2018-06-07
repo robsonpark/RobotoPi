@@ -1,7 +1,7 @@
 from robotoPi import *
 
 robot = RobotoPi()
-sensor = Acelerometer(0x68)
+sensor = Accelerometer(0x68)
 
 while True:
     
